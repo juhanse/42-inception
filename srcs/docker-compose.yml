@@ -6,6 +6,7 @@ volumes:
       device: /home/juhanse/data/wordpress
       o: bind
       type: none
+      
   mariadb:
     name: mariadb
     driver: local

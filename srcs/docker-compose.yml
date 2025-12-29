@@ -6,7 +6,6 @@ volumes:
       device: /home/juhanse/data/wordpress
       o: bind
       type: none
-      
   mariadb:
     name: mariadb
     driver: local
@@ -32,7 +31,6 @@ services:
     networks:
       - inception
     restart: always
-
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress/.
@@ -45,7 +43,6 @@ services:
     networks:
       - inception
     restart: always
-
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb/.

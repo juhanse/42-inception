@@ -2,6 +2,6 @@ FROM debian:buster
 
 RUN apt -y update && apt install -y nginx && apt install openssl -y
 
-COPY ./tools/script.sh /
+COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
 
-CMD ["/script.sh"]
+CMD ["nginx.sh"]

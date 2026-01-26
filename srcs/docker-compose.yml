@@ -1,55 +1,73 @@
-volumes:
-  wordpress:
-    name: wordpress
-    driver: local
-    driver_opts:
-      device: /home/juhanse/data/wordpress
-      o: bind
-      type: none
-  mariadb:
-    name: mariadb
-    driver: local
-    driver_opts:
-      device: /home/juhanse/data/mariadb
-      o: bind
-      type: none
-
-networks:
-  inception:
-    name: inception
-
 services:
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    build: 
+      context: ./requirements/mariadb
+    restart: always
+    env_file: .env
+    secrets:
+      - db_password
+    volumes:
+      - mariadb:/var/lib/mysql
+    networks:
+      - inception
+
+  wordpress:
+    image: wordpress
+    container_name: wordpress
+    build: 
+      context: ./requirements/wordpress
+    restart: always
+    depends_on:
+      - mariadb
+    env_file: .env
+    secrets:
+      - db_password
+      - wp_password
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - inception
+
   nginx:
+    image: nginx
     container_name: nginx
-    build: ./requirements/nginx/.
+    build: 
+      context: ./requirements/nginx
+    restart: always
     ports:
       - "443:443"
     depends_on:
       - wordpress
     volumes:
-      - wordpress:/var/wwww/html
+      - wordpress:/var/www/html
     networks:
       - inception
-    restart: always
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  wp_password:
+    file: ./secrets/wp_password.txt
+
+networks:
+  inception:
+    name: inception
+    driver: bridge
+
+volumes:
   wordpress:
-    container_name: wordpress
-    build: ./requirements/wordpress/.
-    depends_on:
-      - mariadb
-    volumes:
-      - wordpress:/var/wwww/html
-    env_file:
-      - .env
-    networks:
-      - inception
-    restart: always
+    name: wordpress
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/juhanse/data/wordpress
   mariadb:
-    container_name: mariadb
-    build: ./requirements/mariadb/.
-    volumes:
-      - mariadb:/var/lib/mysql
-    env_file:
-      - .env
-    networks:
-      - inception
-    restart: always
+    name: mariadb
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/juhanse/data/mariadb

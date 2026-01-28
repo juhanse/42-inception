@@ -1,30 +1,46 @@
 #!/bin/bash
 
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out $CERTS_ -subj "/C=MO/L=KH/O=1337/OU=student/CN=juhanse.42.ma"
+# On force une valeur si jamais l'env est mal chargé pour éviter le crash
+if [ -z "$DOMAIN_NAME" ]; then
+    DOMAIN_NAME="juhanse.42.fr"
+fi
 
-echo "
-server {
+mkdir -p /etc/nginx/ssl
+
+# Génération du certificat
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/ssl/private/nginx-selfsigned.key \
+    -out /etc/ssl/certs/nginx-selfsigned.crt \
+    -subj "/C=FR/L=Paris/O=42/OU=student/CN=$DOMAIN_NAME"
+
+# Configuration du fichier Nginx
+# Note l'utilisation de \ devant les variables spécifiques à Nginx ($uri, etc.)
+echo "server {
     listen 443 ssl;
     listen [::]:443 ssl;
 
-    #server_name www.$DOMAIN_NAME $DOMAIN_NAME;
+    server_name $DOMAIN_NAME;
 
-    ssl_certificate $CERTS_;
-    ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;" > /etc/nginx/sites-available/default
+    ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+    ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
 
-
-echo '
-    ssl_protocols TLSv1.3;
-
-    index index.php;
     root /var/www/html;
+    index index.php index.html;
 
-    location ~ [^/]\.php(/|$) { 
-            try_files $uri =404;
-            fastcgi_pass wordpress:9000;
-            include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        }
-} ' >>  /etc/nginx/sites-available/default
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
 
-nginx -g "daemon off;"
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_pass wordpress:9000;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+    }
+}" > /etc/nginx/sites-available/default
+
+# On s'assure que le lien symbolique existe (Debian standard)
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+echo "Nginx starting..."
+exec nginx -g "daemon off;"

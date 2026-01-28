@@ -1,13 +1,13 @@
 FROM debian:bookworm
 
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install mariadb-server -y && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install mariadb-server -y
+RUN rm -rf /var/lib/apt/lists/*
 
-COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
+COPY tools/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
-COPY ./conf/script.sh /
+COPY tools/setup.sh /setup.sh
 
-RUN chmod +x /script.sh
+RUN chmod +x /setup.sh
 
-CMD ["/script.sh"]
+ENTRYPOINT ["bash", "/setup.sh"]

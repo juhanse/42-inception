@@ -5,6 +5,6 @@ RUN apt install php-fpm php-mysql -y
 RUN apt install curl -y
 
 COPY ./conf/wp-config.php /
-COPY ./conf/start.sh /
+COPY ./conf/script.sh /
 
 CMD ["/script.sh"]

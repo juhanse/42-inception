@@ -1,9 +1,9 @@
 services:
   mariadb:
-    image: mariadb
     container_name: mariadb
     build: 
       context: ./requirements/mariadb
+      dockerfile: Dockerfile
     restart: always
     env_file: .env
     secrets:
@@ -14,10 +14,10 @@ services:
       - inception
 
   wordpress:
-    image: wordpress
     container_name: wordpress
     build: 
       context: ./requirements/wordpress
+      dockerfile: Dockerfile
     restart: always
     depends_on:
       - mariadb
@@ -31,10 +31,10 @@ services:
       - inception
 
   nginx:
-    image: nginx
     container_name: nginx
     build: 
       context: ./requirements/nginx
+      dockerfile: Dockerfile
     restart: always
     ports:
       - "443:443"
@@ -64,11 +64,11 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /Users/julienhanse/data/wordpress # /home/juhanse/data/wordpress
+      device: ${WP_DATA_PATH}
   mariadb:
     name: mariadb
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /Users/julienhanse/data/mariadb # /home/juhanse/data/mariadb
+      device: ${MARIADB_DATA_PATH}

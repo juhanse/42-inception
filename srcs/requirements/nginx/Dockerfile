@@ -1,7 +1,11 @@
-FROM debian:buster
+FROM debian:bookworm
 
-RUN apt -y update && apt install -y nginx && apt install openssl -y
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y nginx openssl && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY ./conf/nginx.sh /
+
+RUN chmod +x /nginx.sh
 
 CMD ["/nginx.sh"]

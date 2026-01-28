@@ -1,42 +1,43 @@
 #!/bin/bash
 
-mkdir /var/www/
-mkdir /var/www/html
+# 1. Attente de MariaDB (Indispensable pour éviter que WP crash au boot)
+while ! mariadb-admin ping -h"mariadb" --silent; do
+    sleep 1
+done
 
+# 2. On s'assure que le dossier est prêt
 cd /var/www/html
 
-rm -rf *
+# 3. Téléchargement et installation uniquement si WP n'existe pas déjà
+if [ ! -f "wp-settings.php" ]; then
+    wp core download --allow-root
+    
+    # On remplace le config par le tien (copié via le Dockerfile)
+    cp ./wp-config.php .
 
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar 
+    # Installation du site (Utilise les variables .env et les secrets)
+    wp core install --allow-root \
+        --url=$DOMAIN_NAME \
+        --title="Inception" \
+        --admin_user=$WP_ADMIN_USER \
+        --admin_password=$(cat /run/secrets/wp_password) \
+        --admin_email="juhanse@student.42belgium.be" \
+        --skip-email
 
-chmod +x wp-cli.phar 
+    # Création du second utilisateur requis par le sujet
+    wp user create --allow-root \
+        $WP_USER "user@student.42belgium.be" \
+        --user_pass=$(cat /run/secrets/wp_password) \
+        --role=author
+fi
 
-mv wp-cli.phar /usr/local/bin/wp
+# 4. Configuration de PHP-FPM pour Docker (écoute sur le port 9000)
+sed -i 's/listen = \/run\/php\/php8.2-fpm.sock/listen = 9000/g' /etc/php/8.2/fpm/pool.d/www.conf
 
-wp core download --allow-root
+# 5. Création du dossier PID pour PHP (évite les erreurs de lancement)
+mkdir -p /run/php
 
-mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+echo "WordPress configuré !"
 
-mv /wp-config.php /var/www/html/wp-config.php
-
-sed -i -r "s/db1/$db_name/1"   wp-config.php
-sed -i -r "s/user/$db_user/1"  wp-config.php
-sed -i -r "s/pwd/$db_pwd/1"    wp-config.php
-
-wp core install --url=$DOMAIN_NAME/ --title=$WP_TITLE --admin_user=$WP_ADMIN_USR --admin_password=$WP_ADMIN_PWD --admin_email=$WP_ADMIN_EMAIL --skip-email --allow-root
-
-wp user create $WP_USR $WP_EMAIL --role=author --user_pass=$WP_PWD --allow-root
-
-wp theme install astra --activate --allow-root
-
-wp plugin install redis-cache --activate --allow-root
-
-wp plugin update --all --allow-root
- 
-sed -i 's/listen = \/run\/php\/php7.3-fpm.sock/listen = 9000/g' /etc/php/7.3/fpm/pool.d/www.conf
-
-mkdir /run/php
-
-wp redis enable --allow-root
-
-/usr/sbin/php-fpm7.3 -F
+# 6. Exécution au premier plan (PID 1) - Pas de loops infinies !
+exec /usr/sbin/php-fpm8.2 -F

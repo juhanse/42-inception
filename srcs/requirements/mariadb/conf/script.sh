@@ -1,19 +1,38 @@
 #!/bin/bash
 
+# Création des dossiers nécessaires pour le socket et les logs
+mkdir -p /run/mysqld
+chown -R mysql:mysql /run/mysqld
+mkdir -p /var/log/mysql
+chown -R mysql:mysql /var/log/mysql
+
+# Initialisation de la base de données si elle n'existe pas
 if [ ! -d "/var/lib/mysql/mysql" ]; then
-    mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql > /dev/null
+    echo "Initialisation de la base de données..."
+    mysql_install_db --user=mysql --datadir=/var/lib/mysql
 fi
 
-service mysql start 
+# Lecture des secrets
+DB_PWD=$(cat /run/secrets/db_password)
 
-echo "CREATE DATABASE IF NOT EXISTS $mariadb_name ;" > mariadb.sql
-echo "CREATE USER IF NOT EXISTS '$mariadb_user'@'%' IDENTIFIED BY '$mariadb_pwd' ;" >> mariadb.sql
-echo "GRANT ALL PRIVILEGES ON $mariadb_name.* TO '$mariadb_user'@'%' ;" >> mariadb.sql
-echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '12345' ;" >> mariadb.sql
-echo "FLUSH PRIVILEGES;" >> mariadb.sql
+# On lance mysqld en arrière-plan temporairement pour configurer les users
+mysqld_safe --datadir=/var/lib/mysql &
 
-mysql < mariadb.sql
+# On attend que MariaDB soit prêt
+until mysqladmin ping >/dev/null 2>&1; do
+    echo "Attente de MariaDB..."
+    sleep 2
+done
 
-kill $(cat /var/run/mysqld/mysqld.pid)
+# Configuration des utilisateurs (à adapter avec tes variables .env)
+mysql -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;"
+mysql -e "CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${DB_PWD}';"
+mysql -e "GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO \`${MYSQL_USER}\`@'%';"
+mysql -e "FLUSH PRIVILEGES;"
 
-mysqld
+# On éteint l'instance temporaire proprement
+mysqladmin -u root shutdown
+
+# On lance MariaDB au premier plan (obligatoire pour Docker)
+echo "Démarrage définitif de MariaDB..."
+exec mysqld --user=mysql --datadir=/var/lib/mysql --bind-address=0.0.0.0 --skip-networking=OFF

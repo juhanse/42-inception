@@ -40,6 +40,7 @@ services:
       - "443:443"
     depends_on:
       - wordpress
+    env_file: .env
     volumes:
       - wordpress:/var/www/html
     networks:
@@ -47,9 +48,9 @@ services:
 
 secrets:
   db_password:
-    file: ./secrets/db_password.txt
+    file: ../secrets/db_password.txt
   wp_password:
-    file: ./secrets/wp_password.txt
+    file: ../secrets/wp_password.txt
 
 networks:
   inception:
@@ -63,11 +64,11 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/juhanse/data/wordpress
+      device: /Users/julienhanse/data/wordpress # /home/juhanse/data/wordpress
   mariadb:
     name: mariadb
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/juhanse/data/mariadb
+      device: /Users/julienhanse/data/mariadb # /home/juhanse/data/mariadb

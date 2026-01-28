@@ -14,7 +14,6 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -subj "/C=FR/L=Paris/O=42/OU=student/CN=$DOMAIN_NAME"
 
 # Configuration du fichier Nginx
-# Note l'utilisation de \ devant les variables spécifiques à Nginx ($uri, etc.)
 echo "server {
     listen 443 ssl;
     listen [::]:443 ssl;

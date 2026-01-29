@@ -2,6 +2,18 @@
 
 echo "🚀 Démarrage de l'initialisation de MariaDB..."
 
+DB_PASS_PATH="/run/secrets/db_password"
+
+# 2. Vérification de l'existence du secret avant de continuer
+if [ ! -f "$DB_PASS_PATH" ]; then
+    echo "❌ Erreur : Le fichier de secret est introuvable dans /run/secrets/"
+    exit 1
+fi
+
+# 3. Extraction du secret dans une variable
+# On utilise 'tr -d' pour nettoyer d'éventuels retours à la ligne invisibles (\n ou \r)
+SQL_PASSWORD=$(cat "$DB_PASS_PATH" | tr -d '\n\r')
+
 # S'assure que la variables requises ne soient pas vides (-z)
 if [ -z "$SQL_ROOT_PASSWORD" ] || [ -z "$SQL_DATABASE" ] || [ -z "$SQL_USER" ] || [ -z "$SQL_PASSWORD" ]; then
     echo "❌ Variables d'environnement requises manquantes."

@@ -2,6 +2,20 @@
 
 echo "🚀 Lancement de l'installation de WordPress..."
 
+DB_PASS_PATH="/run/secrets/db_password"
+WP_PASS_PATH="/run/secrets/wp_password"
+
+# 2. Vérification de l'existence des secrets avant de continuer
+if [ ! -f "$DB_PASS_PATH" ] || [ ! -f "$WP_PASS_PATH" ]; then
+    echo "❌ Erreur : Les fichiers de secrets sont introuvables dans /run/secrets/"
+    exit 1
+fi
+
+# 3. Extraction des secrets dans des variables
+# On utilise 'tr -d' pour nettoyer d'éventuels retours à la ligne invisibles (\n ou \r)
+SQL_PASSWORD=$(cat "$DB_PASS_PATH" | tr -d '\n\r')
+WP_ADMIN_PASSWORD=$(cat "$WP_PASS_PATH" | tr -d '\n\r')
+
 # S'assure que la variables requises ne soient pas vides (-z)
 if [ -z "$SQL_DATABASE" ] || [ -z "$SQL_USER" ] || \
 	[ -z "$SQL_PASSWORD" ] || [ -z "$DOMAIN_NAME" ] || \

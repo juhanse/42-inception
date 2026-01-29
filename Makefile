@@ -6,7 +6,7 @@
 #    By: juhanse <juhanse@student.s19.be>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/09 14:54:32 by juhanse           #+#    #+#              #
-#    Updated: 2026/01/29 01:02:04 by juhanse          ###   ########.fr        #
+#    Updated: 2026/01/29 11:55:20 by juhanse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,13 @@ GREEN         = \033[0;32m
 RED           = \033[0;31m
 RESET         = \033[0m
 
-all:
+all: setup
 	@echo "$(GREEN)Démarrage de $(NAME)...$(RESET)"
 	docker compose -f $(DOCKER_CONFIG) up --build -d
+
+setup:
+	mkdir -p /home/juhanse/data/mysql
+	mkdir -p /home/juhanse/data/wordpress
 
 down:
 	@echo "$(RED)Arrêt des containers...$(RESET)"
@@ -32,8 +36,9 @@ clean: down
 fclean: clean
 	@echo "$(RED)Nettoyage complet - volumes et données locales...$(RESET)"
 	docker compose -f $(DOCKER_CONFIG) down -v --rmi all
+	rm -rf /home/juhanse/data
 	@docker system prune -af
 
 re: fclean all
 
-.PHONY: all down clean fclean re
+.PHONY: all setup down clean fclean re

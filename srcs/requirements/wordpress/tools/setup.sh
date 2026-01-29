@@ -50,8 +50,8 @@ if [ ! -f /var/www/html/wp-config.php ]; then
     echo "🛠️ Installation de WordPress..."
     wp core install --allow-root \
         --url="${DOMAIN_NAME}" \
-        --title="Inception42" \
-        --admin_user="${WP_ADMIN}" \
+        --title="Inception - juhanse" \
+        --admin_user="${WP_ADMIN_USER}" \
         --admin_password="${WP_ADMIN_PASSWORD}" \
         --admin_email="${WP_ADMIN_EMAIL}" \
         --path="/var/www/html/"

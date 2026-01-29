@@ -10,8 +10,7 @@ if [ ! -f "$DB_PASS_PATH" ]; then
     exit 1
 fi
 
-# 3. Extraction du secret dans une variable
-# On utilise 'tr -d' pour nettoyer d'éventuels retours à la ligne invisibles (\n ou \r)
+# 3. Extraction du secret dans une variable ('tr -d' pour nettoyer \n ou \r)
 SQL_PASSWORD=$(cat "$DB_PASS_PATH" | tr -d '\n\r')
 
 # S'assure que la variables requises ne soient pas vides (-z)

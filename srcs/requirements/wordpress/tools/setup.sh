@@ -11,8 +11,7 @@ if [ ! -f "$DB_PASS_PATH" ] || [ ! -f "$WP_PASS_PATH" ]; then
     exit 1
 fi
 
-# 3. Extraction des secrets dans des variables
-# On utilise 'tr -d' pour nettoyer d'éventuels retours à la ligne invisibles (\n ou \r)
+# 3. Extraction des secrets dans des variables ('tr -d' pour nettoyer \n ou \r)
 SQL_PASSWORD=$(cat "$DB_PASS_PATH" | tr -d '\n\r')
 WP_ADMIN_PASSWORD=$(cat "$WP_PASS_PATH" | tr -d '\n\r')
 

@@ -10,8 +10,6 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 RUN chmod +x /usr/local/bin/wp
 
 RUN mkdir -p /var/www/html
-#RUN chmod -R 755 /var/www/html
-#RUN chown -R www-data:www-data /var/www/html
 
 COPY tools/setup.sh /setup.sh
 RUN chmod +x /setup.sh

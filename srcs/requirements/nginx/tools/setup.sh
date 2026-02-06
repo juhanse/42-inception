@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🔒 Setting up SSL certificates..."
+echo "Setting up SSL certificates..."
 
 # S'assure que la variable DOMAIN_NAME ne soit pas vide (-z)
 if [ -z "$DOMAIN_NAME" ]; then
@@ -13,7 +13,7 @@ mkdir -p /etc/nginx/ssl
 
 # Vérifie si le certificat existe déjà (évite de le recréer à chaque démarrage)
 if [ ! -f /etc/nginx/ssl/nginx.crt ]; then
-    echo "📜 Generating self-signed SSL certificate..."
+    echo "Generating self-signed SSL certificate..."
     
     # Utilise OpenSSL pour générer un certificat auto-signé valable 1 an (365 jours)
     # -x509 : format de certificat
@@ -29,9 +29,9 @@ if [ ! -f /etc/nginx/ssl/nginx.crt ]; then
 
     echo "✅ SSL certificate generated successfully!"
 else
-    echo "🔁 SSL certificate already exists, skipping..."
+    echo "SSL certificate already exists, skipping..."
 fi
 
-echo "🚀 Starting NGINX..."
+echo "Starting NGINX..."
 # Lance le serveur NGINX en avant-plan (nécessaire pour Docker)
 exec nginx -g "daemon off;"

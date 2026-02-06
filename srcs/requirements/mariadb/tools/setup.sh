@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Démarrage de l'initialisation de MariaDB..."
+echo "Démarrage de l'initialisation de MariaDB..."
 
 DB_PASS_PATH="/run/secrets/db_password"
 
@@ -22,7 +22,7 @@ fi
 # Lancer le service MariaDB
 service mariadb start
 
-echo "🔗 Connexion à la base de données..."
+echo "Connexion à la base de données..."
 # Attendre que MariaDB soit prêt à accepter des connexions
 MAX_RETRIES=30
 COUNT=0
@@ -31,7 +31,7 @@ while [ $COUNT -lt $MAX_RETRIES ]; do
         echo "✅ Connexion à la base de données établie !"
         break
     fi
-    echo "🔄 En attente que MariaDB soit prêt... Tentative $((COUNT + 1))/$MAX_RETRIES"
+    echo "En attente que MariaDB soit prêt... Tentative $((COUNT + 1))/$MAX_RETRIES"
     sleep 2
     COUNT=$((COUNT + 1))
 done
@@ -57,10 +57,10 @@ GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO '${SQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
 
-echo "🎉 Configuration de la base de données terminée avec succès !"
+echo "Configuration de la base de données terminée avec succès !"
 
 # Arrêt de MariaDB pour un redémarrage en mode production
-echo "🔥 Démarrage de MariaDB en avant-plan..."
+echo "Démarrage de MariaDB en avant-plan..."
 mysqladmin -u root -p"${SQL_ROOT_PASSWORD}" shutdown
 
 sleep 2

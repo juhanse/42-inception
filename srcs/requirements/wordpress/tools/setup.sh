@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Lancement de l'installation de WordPress..."
+echo "Lancement de l'installation de WordPress..."
 
 DB_PASS_PATH="/run/secrets/db_password"
 WP_PASS_PATH="/run/secrets/wp_password"
@@ -26,7 +26,7 @@ if [ -z "$SQL_DATABASE" ] || [ -z "$SQL_USER" ] || \
 fi
 
 # Temps d'attente pour s'assurer que MariaDB est bien lancé
-echo "🔗 Connexion à la base de données..."
+echo "Connexion à la base de données..."
 sleep 10
 
 # Vérifie que la base de données est prête à accepter les connexions
@@ -37,7 +37,7 @@ while [ $COUNT -lt $MAX_RETRIES ]; do
         echo "✅ Connexion à la base de données établie !"
         break
     fi
-    echo "🔄 En attente que MariaDB soit prêt... Tentative $((COUNT + 1))/$MAX_RETRIES"
+    echo "En attente que MariaDB soit prêt... Tentative $((COUNT + 1))/$MAX_RETRIES"
     sleep 2
     COUNT=$((COUNT + 1))
 done
@@ -49,10 +49,10 @@ fi
 
 # Vérifie si WordPress est déjà installé (pour éviter une double initialisation)
 if [ ! -f /var/www/html/wp-config.php ]; then
-    echo "📥 Téléchargement de WordPress..."
+    echo "Téléchargement de WordPress..."
     wp core download --version=6.0 --locale=fr_FR --allow-root
 
-    echo "⚙️ Création du fichier wp-config.php..."
+    echo "Création du fichier wp-config.php..."
     wp config create --allow-root \
         --dbname="${SQL_DATABASE}" \
         --dbuser="${SQL_USER}" \
@@ -60,7 +60,7 @@ if [ ! -f /var/www/html/wp-config.php ]; then
         --dbhost="mariadb:3306" \
         --path="/var/www/html/"
 
-    echo "🛠️ Installation de WordPress..."
+    echo "Installation de WordPress..."
     wp core install --allow-root \
         --url="${DOMAIN_NAME}" \
         --title="Inception - juhanse" \
@@ -69,14 +69,14 @@ if [ ! -f /var/www/html/wp-config.php ]; then
         --admin_email="${WP_ADMIN_EMAIL}" \
         --path="/var/www/html/"
 
-    echo "👤 Création de l'utilisateur ${WP_USER}..."
+    echo "Création de l'utilisateur ${WP_USER}..."
     wp user create "${WP_USER}" "${WP_USER_EMAIL}" \
         --user_pass="${WP_USER_PASSWORD}" \
         --role=author \
         --allow-root \
         --path="/var/www/html/"
 else
-    echo "ℹ️ WordPress est déjà installé. Aucun changement effectué."
+    echo "WordPress est déjà installé. Aucun changement effectué."
 fi
 
 # Création du dossier requis par PHP-FPM si besoin
@@ -87,6 +87,6 @@ chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
 
 # Lancement de PHP-FPM en avant-plan (pour que le container reste actif)
-echo "🔥 Démarrage de PHP-FPM…"
+echo "Démarrage de PHP-FPM…"
 sleep 2
 exec php-fpm8.2 -F

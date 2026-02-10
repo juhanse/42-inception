@@ -1,4 +1,4 @@
-FROM debian:bookworm
+FROM alpine:3.22
 
 RUN apt-get update && apt-get install nginx -y
 RUN apt-get install openssl -y

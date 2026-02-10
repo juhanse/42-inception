@@ -1,6 +1,6 @@
-FROM debian:bookworm
+FROM alpine:3.22
 
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update
 RUN apt-get install -y wget php8.2-fpm php8.2-mysql mariadb-client
 RUN rm -rf /var/lib/apt/lists/*
 

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "Setting up SSL certificates..."
+echo "Nginx: Démarrage de l'initialisation..."
 
 # S'assure que la variable DOMAIN_NAME ne soit pas vide (-z)
 if [ -z "$DOMAIN_NAME" ]; then
-	echo "❌ Missing required environment variables (DOMAIN_NAME)."
+	echo "❌ Nginx: La variable DOMAINE_NAME est introuvable"
 	exit 1
 fi
 
@@ -13,8 +13,8 @@ mkdir -p /etc/nginx/ssl
 
 # Vérifie si le certificat existe déjà (évite de le recréer à chaque démarrage)
 if [ ! -f /etc/nginx/ssl/nginx.crt ]; then
-    echo "Generating self-signed SSL certificate..."
-    
+    echo "Nginx: Génération du certificat SSL..."
+
     # Utilise OpenSSL pour générer un certificat auto-signé valable 1 an (365 jours)
     # -x509 : format de certificat
     # -nodes : pas de mot de passe sur la clé privée
@@ -27,11 +27,11 @@ if [ ! -f /etc/nginx/ssl/nginx.crt ]; then
         -out /etc/nginx/ssl/nginx.crt \
         -subj "/C=BE/ST=Brussels/L=Brussels/O=42School/OU=student/CN=${DOMAIN_NAME}"
 
-    echo "✅ SSL certificate generated successfully!"
+    echo "✅ Nginx: Certificat SSL généré avec succès !"
 else
-    echo "SSL certificate already exists, skipping..."
+    echo "Nginx: Certificat SSL déjà existant"
 fi
 
-echo "Starting NGINX..."
+echo "Nginx: Démarrage..."
 # Lance le serveur NGINX en avant-plan (nécessaire pour Docker)
 exec nginx -g "daemon off;"

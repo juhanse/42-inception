@@ -47,6 +47,8 @@ services:
 secrets:
   db_password:
     file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
   wp_password:
     file: ../secrets/wp_password.txt
 

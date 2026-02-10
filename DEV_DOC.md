@@ -20,6 +20,7 @@ This document explains how to set up, build, and maintain the Inception infrastr
 
 2. **Secrets:** Create a `secrets/` directory (outside `srcs/`) containing:
 * `db_password.txt`
+* `db_root_password.txt`
 * `wp_password.txt`
 
 

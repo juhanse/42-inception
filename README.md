@@ -49,7 +49,7 @@ cd inception
 
 
 2. **Configure Environment**:
-Create a `.env` file and a `secrets/` directory with `db_password.txt` and `wp_password.txt` as defined in the project documentation.
+Create a `.env` file and a `secrets/` directory with `db_password.txt`, `db_root_password.txt` and `wp_password.txt` as defined in the project documentation.
 3. **Build and Start**:
 ```bash
 sudo make

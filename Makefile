@@ -6,7 +6,7 @@
 #    By: juhanse <juhanse@student.s19.be>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/09 14:54:32 by juhanse           #+#    #+#              #
-#    Updated: 2026/02/10 12:26:34 by juhanse          ###   ########.fr        #
+#    Updated: 2026/02/10 12:33:35 by juhanse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ RESET          = \033[0m
 
 all: setup
 	@echo "$(GREEN)Démarrage de $(NAME)...$(RESET)"
-	docker compose -f $(DOCKER_CONFIG) up --build -d
+	docker compose -f $(DOCKER_COMPOSE) up --build -d
 
 setup:
 	mkdir -p $(DATA_PATH)/mysql
@@ -28,15 +28,15 @@ setup:
 
 down:
 	@echo "$(RED)Arrêt des containers...$(RESET)"
-	docker compose -f $(DOCKER_CONFIG) down
+	docker compose -f $(DOCKER_COMPOSE) down
 
 clean: down
 	@echo "$(RED)Suppression des images et du réseau...$(RESET)"
-	docker compose -f $(DOCKER_CONFIG) down --rmi all
+	docker compose -f $(DOCKER_COMPOSE) down --rmi all
 
 fclean: clean
 	@echo "$(RED)Nettoyage complet - volumes et données locales...$(RESET)"
-	docker compose -f $(DOCKER_CONFIG) down -v --rmi all
+	docker compose -f $(DOCKER_COMPOSE) down -v --rmi all
 	rm -rf $(DATA_PATH)
 	@docker system prune -af
 

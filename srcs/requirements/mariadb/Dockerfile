@@ -1,11 +1,8 @@
 FROM alpine:3.22
 
-RUN apt-get update
-RUN apt-get install mariadb-server -y
-RUN rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache mariadb mariadb-client bash
 
-COPY tools/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-
+COPY tools/50-server.cnf /etc/my.cnf.d/50-server.cnf
 COPY tools/setup.sh /setup.sh
 
 RUN chmod +x /setup.sh

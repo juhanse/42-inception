@@ -1,11 +1,8 @@
 FROM alpine:3.22
 
-RUN apt-get update && apt-get install nginx -y
-RUN apt-get install openssl -y
-RUN rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache nginx openssl bash
 
-RUN rm -f /etc/nginx/sites-enabled/default
-RUN rm -f /etc/nginx/sites-available/default
+RUN mkdir -p /run/nginx
 
 COPY tools/nginx.conf /etc/nginx/nginx.conf
 COPY tools/setup.sh /setup.sh

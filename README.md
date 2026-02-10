@@ -18,7 +18,7 @@ This project is built using **Docker Compose** to orchestrate three main service
 
 ### Design Choices
 
-* **Base Image**: I chose **Debian Bookworm**. Following the project requirement to use the penultimate stable version of Debian or Alpine, Bookworm (Debian 12) was selected. It provides a highly stable environment and native support for PHP 8.2, ensuring both performance and security.
+* **Base Image**: I chose **Alpine 3.22**. Following the project requirement to use the penultimate stable version of Debian or Alpine, Alpine 3.22 was selected. It provides a highly stable environment and native support for PHP 8.2, ensuring both performance and security.
 * **Initialization**: Service startup order is managed via custom shell scripts and `depends_on` to ensure MariaDB is ready before WordPress attempts installation.
 * **WP-CLI**: Used to automate the installation of WordPress and the creation of the mandatory second user without manual browser intervention.
 
@@ -35,7 +35,7 @@ This project is built using **Docker Compose** to orchestrate three main service
 
 ### Prerequisites
 
-* A Linux environment (Virtual Machine recommended, e.g., Lubuntu/Debian).
+* A Linux environment (Virtual Machine recommended, e.g., Lubuntu/Alpine).
 * Docker and Docker Compose installed.
 * Your user added to the `docker` group.
 
@@ -71,7 +71,7 @@ Add `127.0.0.1 juhanse.42.fr` to your `/etc/hosts` and visit `https://juhanse.42
 * [Official Docker Documentation](https://docs.docker.com/)
 * [Nginx Documentation (SSL Module)](https://nginx.org/en/docs/http/configuring_https_servers.html)
 * [WP-CLI Handbook](https://make.wordpress.org/cli/handbook/)
-* [Debian Packages Search](https://packages.debian.org/index)
+* [Alpine Releases](https://www.alpinelinux.org/releases/)
 
 ### Use of AI
 

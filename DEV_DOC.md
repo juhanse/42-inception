@@ -6,7 +6,7 @@ This document explains how to set up, build, and maintain the Inception infrastr
 
 ### Prerequisites
 
-* **OS:** Debian Bookworm or Lubuntu (Virtual Machine recommended).
+* **OS:** Alpine 3.22 or Lubuntu (Virtual Machine recommended).
 * **Tools:** Docker, Docker Compose, GNU Make.
 * **Structure:** Ensure your login matches the paths in the configuration.
 

@@ -77,7 +77,7 @@ else
 fi
 
 # Création du dossier requis par PHP-FPM si besoin
-mkdir -p /run/php
+mkdir -p /run/php82
 
 # Droits d'accès pour NGINX/PHP
 chown -R www-data:www-data /var/www/html
@@ -86,4 +86,6 @@ chmod -R 755 /var/www/html
 # Lancement de PHP-FPM en avant-plan (pour que le container reste actif)
 echo "WordPress: Démarrage de PHP-FPM…"
 sleep 2
-exec php-fpm8.2 -F
+
+# -F pour foreground, obligatoire pour Docker
+exec /usr/sbin/php-fpm82 -F

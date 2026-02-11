@@ -38,7 +38,7 @@ clean: down
 fclean: clean
 	@echo "$(RED)Nettoyage complet - volumes et données locales...$(RESET)"
 	docker compose -f $(DOCKER_COMPOSE) down -v --rmi all
-	rm -rf $(DATA_PATH)
+	@sudo rm -rf $(DATA_PATH)
 	@docker system prune -af
 
 re: fclean all

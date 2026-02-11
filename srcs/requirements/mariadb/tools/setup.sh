@@ -18,14 +18,24 @@ if [ -z "$SQL_DATABASE" ] || [ -z "$SQL_USER" ] || [ -z "$SQL_PASSWORD" ]; then
     exit 1
 fi
 
-service mariadb start
+# Initialisation du dossier de données
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+    echo "MariaDB: Premier lancement, initialisation du dossier système..."
+    mysql_install_db --user=mysql --datadir=/var/lib/mysql --skip-test-db > /dev/null
+fi
+
+# Démarrage temporaire de MariaDB pour configuration
+# Utilisation de --skip-networking pour que personne ne se connecte pendant qu'on règle les MDP
+/usr/bin/mysqld --user=mysql --datadir=/var/lib/mysql --skip-networking &
+PID="$!"
+
 echo "MariaDB: Connexion à la base de données..."
 
 # Attendre que MariaDB soit prêt à accepter des connexions
 MAX_RETRIES=30
 COUNT=0
 while [ $COUNT -lt $MAX_RETRIES ]; do
-    if mysqladmin ping -h"localhost" --silent; then
+    if mariadb-admin ping --silent; then
         echo "✅ MariaDB: Connexion à la base de données établie !"
         break
     fi
@@ -39,29 +49,19 @@ if [ $COUNT -eq $MAX_RETRIES ]; then
     exit 1
 fi
 
-echo "MariaDB: Création de la base de données et des utilisateurs..."
-
-# Définir le mot de passe root
-mysql -u root << EOF
+echo "MariaDB: Configuration des accès..."
+mariadb -u root << EOF
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';
-FLUSH PRIVILEGES;
-EOF
-
-# Utiliser le mot de passe root pour la configuration suivante
-mysql -u root -p"${SQL_ROOT_PASSWORD}" << EOF
 CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;
 CREATE USER IF NOT EXISTS '${SQL_USER}'@'%' IDENTIFIED BY '${SQL_PASSWORD}';
 GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO '${SQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
 
-echo "✅ MariaDB: Configuration de la base de données terminée !"
+# Arrêt propre du serveur temporaire
+echo "MariaDB: Redémarrage en mode production..."
+mariadb-admin -u root -p"${SQL_ROOT_PASSWORD}" shutdown
 
-# Arrêt de MariaDB pour un redémarrage en mode production
-echo "MariaDB: Démarrage en avant-plan..."
-mysqladmin -u root -p"${SQL_ROOT_PASSWORD}" shutdown
-
-sleep 2
-
-# Démarrer MariaDB en avant-plan (foreground)
-exec mysqld_safe
+# Lancement final en avant-plan (PID 1)
+# mysqld est préférable à mysqld_safe dans un conteneur pour la gestion des signaux
+exec /usr/bin/mysqld --user=mysql --datadir=/var/lib/mysql --console

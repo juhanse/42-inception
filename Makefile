@@ -12,7 +12,7 @@
 
 NAME           = inception
 DOCKER_COMPOSE = ./srcs/docker-compose.yml
-DATA_PATH	   = /Users/julienhanse/data
+DATA_PATH	   = /home/juhanse/data
 
 GREEN          = \033[0;32m
 RED            = \033[0;31m
@@ -23,8 +23,9 @@ all: setup
 	docker compose -f $(DOCKER_COMPOSE) up --build -d
 
 setup:
-	mkdir -p $(DATA_PATH)/mysql
-	mkdir -p $(DATA_PATH)/wordpress
+	@sudo mkdir -p $(DATA_PATH)/mysql
+	@sudo mkdir -p $(DATA_PATH)/wordpress
+	@sudo chmod -R 777 /home/juhanse/data
 
 down:
 	@echo "$(RED)Arrêt des containers...$(RESET)"

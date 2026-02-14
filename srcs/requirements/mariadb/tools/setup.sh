@@ -18,14 +18,14 @@ if [ -z "$SQL_DATABASE" ] || [ -z "$SQL_USER" ] || [ -z "$SQL_PASSWORD" ]; then
     exit 1
 fi
 
-# Initialisation du dossier de données
+# Initialisation de la dossier natif de mysql
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     echo "MariaDB: Premier lancement, initialisation du dossier système..."
     mysql_install_db --user=mysql --datadir=/var/lib/mysql --skip-test-db > /dev/null
 fi
 
-# Démarrage temporaire de MariaDB pour configuration
-# Utilisation de --skip-networking pour que personne ne se connecte pendant qu'on règle les MDP
+# Démarrage d'une instance MariaDB pour configuration
+# --skip-networking pour que personne ne se connecte pendant qu'on règle les MDP
 /usr/bin/mysqld --user=mysql --datadir=/var/lib/mysql --skip-networking &
 PID="$!"
 
@@ -58,10 +58,10 @@ GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO '${SQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
 
-# Arrêt propre du serveur temporaire
+# Arrêt propre du serveur temporaire (instance)
 echo "MariaDB: Redémarrage en mode production..."
 mariadb-admin -u root -p"${SQL_ROOT_PASSWORD}" shutdown
 
-# Lancement final en avant-plan (PID 1)
-# mysqld est préférable à mysqld_safe dans un conteneur pour la gestion des signaux
+# Remplace le script par le serveur MariaDB comme processus principal (PID 1) 
+# en utilisant les données du volume et en redirigeant les logs vers la console Docker
 exec /usr/bin/mysqld --user=mysql --datadir=/var/lib/mysql --console

@@ -4,7 +4,7 @@
 
 ## Description
 
-**Inception** is a system administration project that aims to broaden knowledge of system virtualization using **Docker**. The goal is to build a small-scale, high-availability infrastructure consisting of several services, each running in its own dedicated container within a virtual machine.
+**Inception** is a system administration project that aims to broaden knowledge of system virtualization using **Docker**. The goal is to build a small-scale infrastructure consisting of several services, each running in its own dedicated container.
 
 The project involves setting up a LEMP stack (Linux, Engine -> Nginx, MariaDB, PHP-FPM) and WordPress, while strictly adhering to security best practices, such as using **TLS v1.2**, managing **Docker Secrets**, and ensuring persistent storage through **Named Volumes**.
 
@@ -18,7 +18,7 @@ This project is built using **Docker Compose** to orchestrate three main service
 
 ### Design Choices
 
-* **Base Image**: I chose **Alpine 3.22**. Following the project requirement to use the penultimate stable version of Debian or Alpine, Alpine 3.22 was selected. It provides a highly stable environment and native support for PHP 8.2, ensuring both performance and security.
+* **Base Image**: I chose **Alpine 3.22**. Following the project requirement to use the penultimate stable version of Debian or Alpine. Alpine is significantly more lightweight than Debian (decreasing image size by ~80%), which speeds up deployment and reduces the attack surface by including only the strictly necessary packages.
 * **Initialization**: Service startup order is managed via custom shell scripts and `depends_on` to ensure MariaDB is ready before WordPress attempts installation.
 * **WP-CLI**: Used to automate the installation of WordPress and the creation of the mandatory second user without manual browser intervention.
 

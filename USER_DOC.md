@@ -16,9 +16,9 @@ The stack provides a fully functional, containerized WordPress website secured b
 
 All operations must be performed from the root of the project directory using `make`.
 
-* **To Start:** `sudo make`
-* **To Stop:** `sudo make down`
-* **To Restart everything (reset):** `sudo make re`
+* **To Start:** `make`
+* **To Stop:** `make down`
+* **To Restart everything (reset):** `make re`
 
 ## 3. Accessing the Website
 

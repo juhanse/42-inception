@@ -30,7 +30,7 @@ This document explains how to set up, build, and maintain the Inception infrastr
 The project is orchestrated via a `Makefile` that triggers `docker-compose.yml`.
 
 ```bash
-sudo make
+make
 ```
 
 This command:
@@ -56,4 +56,4 @@ Data is stored using **Docker Named Volumes** mapped to the host's file system f
 * `.../wordpress`: Contains the WordPress core files and uploads.
 
 
-* **Persistence:** Data survives `docker compose down`. It is only deleted if `sudo make fclean` is executed.
+* **Persistence:** Data survives `docker compose down`. It is only deleted if `make fclean` is executed.

@@ -83,9 +83,8 @@ mkdir -p /run/php82
 chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
 
-# Lancement de PHP-FPM en avant-plan (pour que le container reste actif)
+# Lance PHP-FPM au premier plan comme processus principal
+# pour maintenir le conteneur actif et traiter les requêtes PHP
 echo "WordPress: Démarrage de PHP-FPM…"
 sleep 2
-
-# -F pour foreground, obligatoire pour Docker
 exec /usr/sbin/php-fpm82 -F

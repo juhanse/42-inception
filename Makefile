@@ -6,7 +6,7 @@
 #    By: juhanse <juhanse@student.s19.be>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/09 14:54:32 by juhanse           #+#    #+#              #
-#    Updated: 2026/02/18 21:32:01 by juhanse          ###   ########.fr        #
+#    Updated: 2026/02/18 21:38:35 by juhanse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,17 +29,16 @@ setup:
 
 down:
 	@echo "$(RED)Arrêt des containers...$(RESET)"
-	docker compose -f $(DOCKER_COMPOSE) down
+	docker compose -f $(DOCKER_COMPOSE) stop
 
 clean: down
-	@echo "$(RED)Suppression des images et du réseau...$(RESET)"
-	docker compose -f $(DOCKER_COMPOSE) down --rmi all
+	@echo "$(RED)Suppression des containers et réseaux...$(RESET)"
+	docker compose -f $(DOCKER_COMPOSE) down
 
 fclean: clean
-	@echo "$(RED)Nettoyage complet - volumes et données locales...$(RESET)"
+	@echo "$(RED)Nettoyage complet - images, volumes et réseaux...$(RESET)"
 	docker compose -f $(DOCKER_COMPOSE) down -v --rmi all
 	@sudo rm -rf $(DATA_PATH)
-	@docker system prune -af
 
 re: fclean all
 

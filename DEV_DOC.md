@@ -46,14 +46,21 @@ This command:
 | View Logs | `docker logs <container_name>` |
 | Execute Shell | `docker exec -it <container_name> bash` |
 | Check DB Connection | `docker exec -it wordpress wp db check --allow-root` |
+| List MariaDB Databases | `docker exec -it mariadb mariadb -u root -p -e "SHOW DATABASES;"` |
+| List MariaDB Tables | `docker exec -it mariadb mariadb -u root -p -D wordpress -e "SHOW TABLES;"` |
 
 ## 4. Data Persistence
 
 Data is stored using **Docker Named Volumes** mapped to the host's file system for performance and persistence.
 
-* **Path:** `/home/juhanse/data/`
+### **Path:** `/home/juhanse/data/`
 * `.../mysql`: Contains MariaDB raw data files.
 * `.../wordpress`: Contains the WordPress core files and uploads.
 
 
-* **Persistence:** Data survives `docker compose down`. It is only deleted if `make fclean` is executed.
+### **Verification:**
+* Use `lsblk` to view block devices and mount points on the host.
+* Use `docker volume ls` to list volumes managed by Docker.
+
+### **Persistence:** 
+Data survives `docker compose down`. It is only deleted if `make fclean` is executed.

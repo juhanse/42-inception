@@ -6,7 +6,7 @@
 #    By: juhanse <juhanse@student.s19.be>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/09 14:54:32 by juhanse           #+#    #+#              #
-#    Updated: 2026/02/10 12:33:35 by juhanse          ###   ########.fr        #
+#    Updated: 2026/02/18 21:32:01 by juhanse          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ all: setup
 setup:
 	@sudo mkdir -p $(DATA_PATH)/mysql
 	@sudo mkdir -p $(DATA_PATH)/wordpress
-	@sudo chmod -R 777 /home/juhanse/data
+	@sudo chmod -R 777 $(DATA_PATH)
 
 down:
 	@echo "$(RED)Arrêt des containers...$(RESET)"

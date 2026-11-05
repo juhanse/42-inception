@@ -6,7 +6,7 @@ services:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
     restart: always
-    env_file: .env
+    env_file: ../.env
     secrets:
       - db_password
       - db_root_password
@@ -35,7 +35,7 @@ services:
     depends_on:
       - mariadb
       - redis
-    env_file: .env
+    env_file: ../.env
     secrets:
       - db_password
       - wp_admin_password
@@ -58,7 +58,7 @@ services:
       - wordpress
       - adminer
       - astro
-    env_file: .env
+    env_file: ../.env
     volumes:
       - wordpress:/var/www/html
       - adminer_data:/var/www/adminer:ro
@@ -92,7 +92,7 @@ services:
     ports:
       - "21:21"
       - "21100-21105:21100-21105"
-    env_file: .env
+    env_file: ../.env
     secrets:
       - ftp_password
     volumes:
@@ -118,7 +118,7 @@ services:
     container_name: astro
     image: astro
     build:
-      context: ./requirements/bonus/astro
+      context: ./requirements/bonus/web
       dockerfile: Dockerfile
     restart: always
     networks:
@@ -154,11 +154,11 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ${WP_DATA_PATH}
+      device: /home/juhanse/data/wordpress
   mariadb:
     name: mariadb
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${MARIADB_DATA_PATH}
+      device: /home/juhanse/data/mariadb

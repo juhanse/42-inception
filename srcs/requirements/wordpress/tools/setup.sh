@@ -74,6 +74,15 @@ if [ ! -f /var/www/html/wp-config.php ]; then
         --role=author \
         --allow-root \
         --path="/var/www/html/"
+
+    echo "WordPress: Configuration de Redis Cache..."
+    wp config set WP_REDIS_HOST redis --raw --allow-root --path="/var/www/html/"
+    wp config set WP_REDIS_PORT 6379 --raw --allow-root --path="/var/www/html/"
+    wp config set WP_CACHE true --raw --allow-root --path="/var/www/html/"
+
+    echo "WordPress: Installation et activation du plugin Redis..."
+    wp plugin install redis-cache --activate --allow-root --path="/var/www/html/"
+    wp redis enable --allow-root --path="/var/www/html/"
 else
     echo "WordPress: WordPress est déjà installé"
 fi

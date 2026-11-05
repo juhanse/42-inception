@@ -15,6 +15,7 @@ RUN apk add --no-cache \
     php82-zip \
     php82-phar \
     php82-iconv \
+    php82-pecl-redis \
     mariadb-client \
     wget \
     bash

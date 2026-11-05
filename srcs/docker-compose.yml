@@ -15,6 +15,16 @@ services:
     networks:
       - inception
 
+  redis:
+    container_name: redis
+    image: redis
+    build:
+      context: ./requirements/bonus/redis
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - inception
+
   wordpress:
     container_name: wordpress
     image: wordpress

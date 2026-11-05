@@ -18,7 +18,7 @@ This project is built using **Docker Compose** to orchestrate three main service
 
 ### Design Choices
 
-* **Base Image**: I chose **Alpine 3.22**. Following the project requirement to use the penultimate stable version of Debian or Alpine. Alpine is significantly more lightweight than Debian (decreasing image size by ~80%), which speeds up deployment and reduces the attack surface by including only the strictly necessary packages.
+* **Base Image**: I chose **Alpine 3.23**. Following the project requirement to use the penultimate stable version of Debian or Alpine. Alpine is significantly more lightweight than Debian (decreasing image size by ~80%), which speeds up deployment and reduces the attack surface by including only the strictly necessary packages.
 * **Initialization**: Service startup order is managed via custom shell scripts and `depends_on` to ensure MariaDB is ready before WordPress attempts installation.
 * **WP-CLI**: Used to automate the installation of WordPress and the creation of the mandatory second user without manual browser intervention.
 

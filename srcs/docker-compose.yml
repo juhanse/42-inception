@@ -57,6 +57,7 @@ services:
     depends_on:
       - wordpress
       - adminer
+      - astro
     env_file: .env
     volumes:
       - wordpress:/var/www/html
@@ -95,6 +96,16 @@ services:
       - mariadb
     volumes:
       - adminer_data:/var/www/adminer
+    networks:
+      - inception
+
+  astro:
+    container_name: astro
+    image: astro
+    build:
+      context: ./requirements/bonus/astro
+      dockerfile: Dockerfile
+    restart: always
     networks:
       - inception
 

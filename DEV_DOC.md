@@ -23,6 +23,7 @@ This document explains how to set up, build, and maintain the Inception infrastr
 * `db_root_password.txt`
 * `wp_user_password.txt`
 * `wp_admin_password.txt`
+* `ftp_password.txt`
 
 
 

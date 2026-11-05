@@ -13,7 +13,7 @@ fi
 SQL_PASSWORD=$(cat "$DB_PASS_PATH" | tr -d '\n\r')
 SQL_ROOT_PASSWORD=$(cat "$DB_ROOT_PASS_PATH" | tr -d '\n\r')
 
-if [ -z "$SQL_DATABASE" ] || [ -z "$SQL_USER" ] || [ -z "$SQL_PASSWORD" ]; then
+if [ -z "$SQL_DATABASE" ] || [ -z "$SQL_USER" ]; then
     echo "❌ MariaDB: Variables d'environnement requises manquantes."
     exit 1
 fi

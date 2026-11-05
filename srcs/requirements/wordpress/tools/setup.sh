@@ -3,15 +3,17 @@
 echo "WordPress: Démarrage de l'initialisation..."
 
 DB_PASS_PATH="/run/secrets/db_password"
-WP_PASS_PATH="/run/secrets/wp_password"
+WP_ADMIN_PASS_PATH="/run/secrets/wp_admin_password"
+WP_USER_PASS_PATH="/run/secrets/wp_user_password"
 
-if [ ! -f "$DB_PASS_PATH" ] || [ ! -f "$WP_PASS_PATH" ]; then
+if [ ! -f "$DB_PASS_PATH" ] || [ ! -f "$WP_ADMIN_PASS_PATH" ] || [ ! -f "$WP_USER_PASS_PATH" ]; then
     echo "❌ WordPress: Le fichier de secret est introuvable"
     exit 1
 fi
 
 SQL_PASSWORD=$(cat "$DB_PASS_PATH" | tr -d '\n\r')
-WP_ADMIN_PASSWORD=$(cat "$WP_PASS_PATH" | tr -d '\n\r')
+WP_ADMIN_PASSWORD=$(cat "$WP_ADMIN_PASS_PATH" | tr -d '\n\r')
+WP_USER_PASSWORD=$(cat "$WP_USER_PASS_PATH" | tr -d '\n\r')
 
 if [ -z "$SQL_DATABASE" ] || [ -z "$SQL_USER" ] || \
 	[ -z "$SQL_PASSWORD" ] || [ -z "$DOMAIN_NAME" ] || \
